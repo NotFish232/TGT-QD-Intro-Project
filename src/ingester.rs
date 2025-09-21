@@ -3,7 +3,7 @@ use std::net::TcpStream;
 use tungstenite::{Message, WebSocket, connect, stream::MaybeTlsStream};
 
 use crate::{
-    models::{CurrencyRequest, OrderBookSnapshot, OrderBookUpdate, ServerInfo, SubscribeInfo},
+    models::{CurrencyRequest, OrderBookSnapshot, ServerInfo, SubscribeInfo},
     order_book::OrderBook,
 };
 use std::error::Error;
@@ -66,7 +66,7 @@ impl Ingester {
 
         // consume the message that confirms the subscription was successful
         let subscribe_bytes = self.websocket.read()?.into_text()?;
-        let subscribe_info: SubscribeInfo = serde_json::from_str(&subscribe_bytes)?;
+        let _subscribe_info: SubscribeInfo = serde_json::from_str(&subscribe_bytes)?;
 
         // consume the next message that contains the initial snapshot of the orderbook
         let order_book_snapshot_bytes = self.websocket.read()?.into_text()?;
@@ -78,16 +78,12 @@ impl Ingester {
         loop {
             let order_book_update_bytes = self.websocket.read()?.into_text()?;
 
-            if order_book_update_bytes == format!("[{},\"hb\"]", subscribe_info.channel_id) {
-                continue;
+            if let Ok(order_book_update) = serde_json::from_str(&order_book_update_bytes) {
+                self.order_book.update(order_book_update)?;
+                self.order_book.display();
             }
 
-            let order_book_update: OrderBookUpdate =
-                serde_json::from_str(&order_book_update_bytes)?;
-
-            self.order_book.update(order_book_update)?;
-
-            println!("{:?}", self.order_book);
+            
         }
     }
 }

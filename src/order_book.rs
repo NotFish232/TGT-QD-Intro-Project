@@ -41,6 +41,7 @@ impl OrderBook {
         };
 
         if order_book_update.data.count == 0 {
+            // remove entry from orderboook
             if let Entry::Occupied(e) = map.entry(order_book_update.data.price.to_string()) {
                 e.remove_entry();
             } else {
@@ -58,5 +59,26 @@ impl OrderBook {
         }
 
         Ok(())
+    }
+
+    pub fn display(&self) {
+        let bids = self.bids.iter().rev().take(self.num_levels as usize);
+        let asks = self.asks.iter().take(self.num_levels as usize);
+
+        println!("Bid Price | Amount | Ask Price | Amount");
+
+        println!("{:-<40}", "");
+
+        for ((bid_price, bid_count), (ask_price, ask_count)) in bids.zip(asks) {
+            println!(
+                "{:.1}    | {}      | {:.1}    | {}",
+                bid_price.parse::<f64>().unwrap(),
+                bid_count,
+                ask_price.parse::<f64>().unwrap(),
+                ask_count
+            );
+        }
+
+        println!();
     }
 }
