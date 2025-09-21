@@ -9,7 +9,6 @@ use crate::{
 use std::error::Error;
 
 // struct that ingests websocket data and updates orderbook accordingly
-// has a field for server_info, which contains version and server id
 // websocket is the open websocket connection to the exchange
 // order_book is originally initialized as empty because to initialize it we need to pull
 // a snapshot of the initial order_book state, which will be done in the run method
@@ -75,6 +74,8 @@ impl Ingester {
         // makes the initial order book based on the snapshot
         self.order_book = OrderBook::new(order_book_snapshot, self.currency_request.num_levels);
 
+        self.order_book.display();
+
         loop {
             let order_book_update_bytes = self.websocket.read()?.into_text()?;
 
@@ -82,8 +83,6 @@ impl Ingester {
                 self.order_book.update(order_book_update)?;
                 self.order_book.display();
             }
-
-            
         }
     }
 }

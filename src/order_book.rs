@@ -18,6 +18,7 @@ impl OrderBook {
 
         for entry in order_book_snapshot.entries {
             // per the documentation if amount > 0 then bids else asks
+            // insert as string since floats don't have full ordering
             if entry.amount > 0.0 {
                 bids.insert(entry.price.to_string(), entry.count);
             } else {
@@ -65,10 +66,12 @@ impl OrderBook {
         let bids = self.bids.iter().rev().take(self.num_levels as usize);
         let asks = self.asks.iter().take(self.num_levels as usize);
 
+        // print header
         println!("Bid Price | Amount | Ask Price | Amount");
 
         println!("{:-<40}", "");
 
+        // since we are using P0 precision from the exchange, the size of the values is guarenteed to fit
         for ((bid_price, bid_count), (ask_price, ask_count)) in bids.zip(asks) {
             println!(
                 "{:.1}    | {}      | {:.1}    | {}",

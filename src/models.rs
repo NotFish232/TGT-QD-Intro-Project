@@ -39,7 +39,7 @@ pub struct OrderBookEntry {
 }
 
 // struct for a single order book update
-// contains  the channel id and an order book entry
+// contains the channel id and an order book entry
 #[allow(unused)]
 #[derive(Debug, Deserialize)]
 pub struct OrderBookUpdate {

@@ -12,6 +12,8 @@ fn main() {
         num_levels: 5,
     };
 
+    // create a new ingester with an exchange_url and some currency and num levels and run
+
     let mut ingester =
         Ingester::new(exchange_url, currency_request).expect("Could not initialize Ingester");
 
