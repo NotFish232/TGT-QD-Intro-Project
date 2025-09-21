@@ -33,6 +33,7 @@ impl OrderBook {
         }
     }
 
+    // updates the order book based on the exchange's real time updates
     pub fn update(&mut self, order_book_update: OrderBookUpdate) -> Result<(), Box<dyn Error>> {
         // if amount is positive update bids else update asks
         let map = if order_book_update.data.amount > 0.0 {
@@ -62,6 +63,7 @@ impl OrderBook {
         Ok(())
     }
 
+    // displays the the top n bids and asks in columnar format where n is `self.num_levels`
     pub fn display(&self) {
         let bids = self.bids.iter().rev().take(self.num_levels as usize);
         let asks = self.asks.iter().take(self.num_levels as usize);

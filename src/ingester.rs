@@ -49,6 +49,7 @@ impl Ingester {
         }
     }
 
+    // run the actual ingester loop, updating and displaying the current orderbook
     pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
         // subscribe to the book websocket by sending initial message
         let subscribe_msg = format!(
