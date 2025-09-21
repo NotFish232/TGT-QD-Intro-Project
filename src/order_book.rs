@@ -12,6 +12,7 @@ pub struct OrderBook {
 }
 
 impl OrderBook {
+    // constructs a new order book from the order book snapshots and a number of levels
     pub fn new(order_book_snapshot: OrderBookSnapshot, num_levels: u64) -> Self {
         let mut asks = BTreeMap::new();
         let mut bids = BTreeMap::new();
@@ -43,7 +44,7 @@ impl OrderBook {
         };
 
         if order_book_update.data.count == 0 {
-            // remove entry from orderboook
+            // remove entry from orderbook
             if let Entry::Occupied(e) = map.entry(order_book_update.data.price.to_string()) {
                 e.remove_entry();
             } else {
